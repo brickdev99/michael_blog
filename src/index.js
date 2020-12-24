@@ -5,24 +5,23 @@ const handlebars = require("express-handlebars");
 const { extname } = require("path");
 const app = express();
 
+const route = require("./routes");
+
 app.use(express.static(path.join(__dirname, "public")));
 
-// HTTP loggers
-app.use(morgan("combined"));
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
+app.use(express.json());
 
 // Template engine
 app.engine("hbs", handlebars({ extname: ".hbs" }));
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "resources/views"));
 
-console.log(__dirname);
-
-app.get("/", function (req, res) {
-  res.render("home");
-});
-
-app.get("/news", function (req, res) {
-  res.render("news");
-});
+// Routes init
+route(app);
 
 app.listen(3000);
